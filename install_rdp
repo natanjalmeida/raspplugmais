@@ -1,0 +1,133 @@
+#!/bin/bash
+clear
+if [[ $EUID -ne 0 ]]; then
+   echo "Execute esse script com o sudo" 
+   exit 1
+fi
+
+echo "Bem vindo ao script de configuração de Terminais da Plugmais."
+echo "Siga as instruções para realizar a configuração do equipamento."
+echo "Certifique-se que está com a versão mais atual do Raspbian instalado"
+echo " Pressione qualquer tecla para continuar..."
+read
+clear
+
+echo -e "Deseja verificar as atualizações do sistema? \n [1] Sim \n [2] Não (default)"
+read atualizar
+case $atualizar in
+	1) 
+		clear
+		apt update -y && apt upgrade -y && apt autoclean && apt autoremove
+		clear
+		echo "Sistema atualizado, pressione qualquer tecla para continuar"
+		read;;
+esac
+clear
+
+# Configurando o arquivo /etc/hosts
+sed -i '/terminal-01/d' /etc/hosts
+sed -i '/terminal-02/d' /etc/hosts
+sed -i '/painel/d' /etc/hosts
+echo '
+172.16.2.7	terminal-01	terminal-01.plugmais.local
+172.16.2.8	terminal-02	terminal-02.plugmais.local
+172.16.2.20	painel		painel.plugmais.local' >> /etc/hosts
+
+
+echo -e 'Selecione o tipo de instalação que irá fazer \n [1] Terminal \n [2] Painel'
+read var
+clear
+
+case "$var" in
+	1)
+		clear
+		echo "Instalando o Terminal"
+		rm /usr/local/bin/rdp.sh
+		# Deleta o rdp.sh do autostart
+		sed -i '/rdp.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		# Deleta o painel.sh do autostart
+		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		# Instalar o FreeRDP2-x11
+		echo "Instalando o FreeRDP2-x11"
+		apt install freerdp2-x11 -y
+		clear
+		echo -e "Qual servidor deseja utilizar? \n [1] terminal-01.plugmais.local \n [2] terminal-02.plugmais.local (default)"
+		read ts
+		case $ts in
+			1) tsserver='terminal-01.plugmais.local';;
+			*) tsserver='terminal-02.plugmais.local';;
+		esac
+		clear
+		# Cria o script rdp.sh
+		echo -e "#!/bin/sh
+SCREEN_WIDTH=\$(xwininfo -root | awk '\$1==\"Width:\" {print \$2}')
+SCREEN_HEIGHT=\$(xwininfo -root | awk '\$1==\"Height:\" {print \$2}')
+servidor=\"${tsserver}\"
+while true
+do
+        ENTRY=\`zenity --forms --title=\"Terminal::Plugmais\" --width=\$SCREEN_WIDTH --height=\$SCREEN_HEIGHT --ok-label=Conectar \\
+                --text=\"Informe seus dados de acesso. Servidor: \$servidor\" \\
+                --separator=\",\" \\
+                --add-entry=\"Usuário\" \\
+                --add-password=\"Senha\"  2> /dev/null\`
+        case \$? in
+                0)
+                        user=\"\`echo \$ENTRY | cut -d',' -f1\`\"
+                        pass=\"\`echo \$ENTRY | cut -d',' -f2\`\"
+                        xfreerdp /u:\"\$user\" /p:\"\$pass\" /v:\$servidor \\
+                           /f /cert-ignore +auto-reconnect +compression -offscreen-cache;;
+        esac
+done" >> /usr/local/bin/rdp.sh
+		chmod +x /usr/local/bin/rdp.sh
+		clear
+		# Inclui o rdp.sh ao autostart
+		echo 'rdp.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
+		echo 'Terminal instalado com êxito, reinicie para utilizar!';;
+	2)
+		echo "Instalando o Painel"
+		apt install chromium-browser
+		clear
+		echo -e "Informe o departamento \n [1] Estoque \n [2] Financeiro"
+		read depto
+		case $depto in
+			1) departamento='estoque';;
+			2) departamento='financeiro';;
+		esac
+		echo "Escolha: $depto"
+		echo "Departamento: $departamento"
+		clear
+		echo "Instalando o Painel"
+		rm /usr/local/bin/painel.sh
+		clear
+		echo -e "Informe o códido da Loja onde será usado, \n ou deixe em branco para todas as lojas:"
+		read loja
+		# Deleta o rdp.sh do autostart
+		sed -i '/rdp.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		# Deleta o painel.sh do autostart
+		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		# Cria o script painel.sh
+		echo -e "#!/bin/bash
+chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --start-fullscreen --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
+		chmod +x /usr/local/bin/painel.sh
+		# Inclui o painel.sh ao autostart
+		echo 'painel.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
+		clear
+		echo "Painel $departamento$loja configurado com êxito, reinicie para visualizar";;
+	*)
+		echo "Opção inválida"
+		exit 1;;
+esac
+echo -e "\n Pressione qualquer tecla para finalizar"
+read
+clear
+
+# Deleta o rdp.sh do autostart
+#sed -i '/rdp.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+# Deleta o painel.sh do autostart
+#sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+
+# Inclui o painel.sh ao autostart
+#echo 'painel.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
+
+# Inclui o rdp.sh ao autostart
+#echo 'rdp.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
