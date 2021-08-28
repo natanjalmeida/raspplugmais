@@ -17,7 +17,7 @@ read atualizar
 case $atualizar in
 	1) 
 		clear
-		apt update -y && apt upgrade -y && apt autoclean && apt autoremove
+		apt update -y && apt upgrade -y && apt autoclean -y && apt autoremove -y
 		clear
 		echo "Sistema atualizado, pressione qualquer tecla para continuar"
 		read;;
