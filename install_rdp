@@ -85,7 +85,7 @@ done" >> /usr/local/bin/rdp.sh
 		echo 'Terminal instalado com êxito, reinicie para utilizar!';;
 	2)
 		echo "Instalando o Painel"
-		apt install chromium-browser
+		apt install chromium-browser xscreensaver
 		clear
 		echo -e "Informe o departamento \n [1] Estoque \n [2] Financeiro"
 		read depto
