@@ -17,7 +17,7 @@ read atualizar
 case $atualizar in
 	1) 
 		clear
-		apt update -y && apt upgrade -y && apt autoclean -y && apt autoremove -y
+		apt update -y && apt upgrade -y && apt autoclean -y && apt autoremove -y && rpi-update -y
 		clear
 		echo "Sistema atualizado, pressione qualquer tecla para continuar"
 		read;;
@@ -49,7 +49,7 @@ case "$var" in
 		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
 		# Instalar o FreeRDP2-x11
 		echo "Instalando o FreeRDP2-x11"
-		apt install freerdp2-x11 -y
+		apt install freerdp2-x11 x11-utils -y
 		clear
 		echo -e "Qual servidor deseja utilizar? \n [1] terminal-01.plugmais.local \n [2] terminal-02.plugmais.local (default)"
 		read ts
