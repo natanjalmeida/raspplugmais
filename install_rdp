@@ -85,7 +85,7 @@ done" >> /usr/local/bin/rdp.sh
 		echo 'Terminal instalado com êxito, reinicie para utilizar!';;
 	2)
 		echo "Instalando o Painel"
-		apt install chromium-browser xscreensaver
+		apt install chromium-browser xscreensaver -y
 		clear
 		echo -e "Informe o departamento \n [1] Estoque \n [2] Financeiro"
 		read depto
@@ -107,7 +107,7 @@ done" >> /usr/local/bin/rdp.sh
 		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
 		# Cria o script painel.sh
 		echo -e "#!/bin/bash
-chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --start-fullscreen --autoplay-policy=no-user-gesture-required --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
+chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --noerrors --disable-session-crashed-bubble --disable-infobars --kiosk --autoplay-policy=no-user-gesture-required --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
 		chmod +x /usr/local/bin/painel.sh
 		# Inclui o painel.sh ao autostart
 		echo 'painel.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
