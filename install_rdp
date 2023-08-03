@@ -74,8 +74,8 @@ do
                 0)
                         user=\"\`echo \$ENTRY | cut -d',' -f1\`\"
                         pass=\"\`echo \$ENTRY | cut -d',' -f2\`\"
-                        xfreerdp /u:\"\$user\" /p:\"\$pass\" /v:\$servidor \\
-                           /f /cert-ignore +auto-reconnect /compression /network:modem -offscreen-cache;;
+                        xfreerdp /u:\'PLUGMAIS\\'"\$user\" /p:\"\$pass\" /v:\$servidor \\
+                           /f /cert-ignore +auto-reconnect /compression /network:modem -offscreen-cache -sec-nla;;
         esac
 done" >> /usr/local/bin/rdp.sh
 		chmod +x /usr/local/bin/rdp.sh
