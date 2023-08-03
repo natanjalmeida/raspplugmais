@@ -45,8 +45,10 @@ case "$var" in
 		rm /usr/local/bin/rdp.sh
 		# Deleta o rdp.sh do autostart
 		sed -i '/rdp.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		sed -i '/rdp.sh/d' .config/lxsession/LXDE/autostart
 		# Deleta o painel.sh do autostart
 		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		sed -i '/painel.sh/d' .config/lxsession/LXDE/autostart
 		# Instalar o FreeRDP2-x11
 		echo "Instalando o FreeRDP2-x11"
 		apt install freerdp2-x11 x11-utils -y
@@ -82,6 +84,7 @@ done" >> /usr/local/bin/rdp.sh
 		clear
 		# Inclui o rdp.sh ao autostart
 		echo 'rdp.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
+		echo '@rdp.sh' >> .config/lxsession/LXDE/autostart
 		echo 'Terminal instalado com êxito, reinicie para utilizar!';;
 	2)
 		echo "Instalando o Painel"
@@ -103,8 +106,10 @@ done" >> /usr/local/bin/rdp.sh
 		read loja
 		# Deleta o rdp.sh do autostart
 		sed -i '/rdp.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		sed -i '/rdp.sh/d' .config/lxsession/LXDE/autostart
 		# Deleta o painel.sh do autostart
 		sed -i '/painel.sh/d' /etc/xdg/lxsession/LXDE-pi/autostart
+		sed -i '/painel.sh/d' .config/lxsession/LXDE/autostart
 		# Cria o script painel.sh
 		echo -e "#!/bin/bash
 chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --noerrors --disable-session-crashed-bubble --disable-infobars --kiosk --autoplay-policy=no-user-gesture-required --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
@@ -112,6 +117,7 @@ chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --noe
 		chattr +i /home/pi/.config/chromium/Default/Preferences
 		# Inclui o painel.sh ao autostart
 		echo 'painel.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart
+		echo '@painel.sh' >> .config/lxsession/LXDE/autostart
 		clear
 		echo "Painel $departamento$loja configurado com êxito, reinicie para visualizar";;
 	*)
