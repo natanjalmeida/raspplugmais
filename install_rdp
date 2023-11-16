@@ -112,7 +112,7 @@ done" >> /usr/local/bin/rdp.sh
 		sed -i '/painel.sh/d' ~/.config/lxsession/LXDE/autostart
 		# Cria o script painel.sh
 		echo -e "#!/bin/bash
-chromium-browser --app=http://painel.plugmais.local/$departamento/tv/$loja --noerrors --disable-session-crashed-bubble --disable-infobars --kiosk --autoplay-policy=no-user-gesture-required --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
+chromium-browser --app=https://painel.plugmais.com.br/$departamento/tv/$loja --noerrors --disable-session-crashed-bubble --disable-infobars --kiosk --autoplay-policy=no-user-gesture-required --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies" >> /usr/local/bin/painel.sh
 		chmod +x /usr/local/bin/painel.sh
 		chattr +i /home/pi/.config/chromium/Default/Preferences
 		# Inclui o painel.sh ao autostart
